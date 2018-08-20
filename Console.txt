@@ -1,0 +1,47 @@
+> library(ggplot2)
+> library(xtable) 
+> library(gridExtra)
+> library(ggplot2) 
+> library(ggthemes) 
+> library(tufte) 
+> head(mtcars) 
+                   mpg cyl disp  hp drat    wt  qsec vs am gear carb
+Mazda RX4         21.0   6  160 110 3.90 2.620 16.46  0  1    4    4
+Mazda RX4 Wag     21.0   6  160 110 3.90 2.875 17.02  0  1    4    4
+Datsun 710        22.8   4  108  93 3.85 2.320 18.61  1  1    4    1
+Hornet 4 Drive    21.4   6  258 110 3.08 3.215 19.44  1  0    3    1
+Hornet Sportabout 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2
+Valiant           18.1   6  225 105 2.76 3.460 20.22  1  0    3    1
+> mtcars$cyl <- factor(mtcars$cyl) 
+> mtcars$labels <- row.names(mtcars) 
+> 
+> #Boxplot
+> boxplot(mtcars$mpg)
+> boxplot(mtcars$mpg, horizontal = TRUE)
+> 
+> boxplot(mtcars$mpg ~ mtcars$cyl) 
+> mpg_split <- split(mtcars$mpg, mtcars$cyl) 
+> mpg_split
+$`4`
+ [1] 22.8 24.4 22.8 32.4 30.4 33.9 21.5 27.3 26.0 30.4 21.4
+
+$`6`
+[1] 21.0 21.0 21.4 18.1 19.2 17.8 19.7
+
+$`8`
+ [1] 18.7 14.3 16.4 17.3 15.2 10.4 10.4 14.7 15.5 15.2 13.3 19.2 15.8 15.0
+
+> mpg_4 <- mpg_split$'4'
+> mpg_6 <- mpg_split$'6'
+> mpg_8 <- mpg_split$'8'
+> boxplot(mpg_4, mpg_6, mpg_8,col = c('red', 'blue', 'yellow')) 
+> p <- ggplot(data = mtcars, aes(x = cyl, y = mpg, fill = cyl))
+> p <- p + geom_boxplot() +ggtitle("Car Milage Data") +labs(x = "Number of Cylinders", y = "Miles Per Gallon") +scale_fill_discrete(name = "Cylinders")
+> p
+> 
+> #Whisker type boxplot
+> p4 <- ggplot(mtcars, aes(factor(cyl), mpg))
+> p4 + theme_tufte(ticks=FALSE) +geom_tufteboxplot(median.type = "line", whisker.type = 'line', hoffset = 0, width = 3)
+Warning message:
+position_dodge requires non-overlapping x intervals 
+>
